@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}{{ service.name }}{% endblock %}
+{% block content %}
+  <h1>{{ service.name }}</h1>
+  {% if service.image %}<img src="{{ service.image.url }}" alt="{{ service.name }}" style="max-width:100%">{% endif %}
+  <p>Категория: {{ service.category }}</p>
+  <p>Цена: {{ service.price }} ₽</p>
+  <p><a href="{% url 'agency:service_list' %}">← Ко всем услугам</a></p>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Услуги{% endblock %}
+{% block content %}
+  <h1>Наши услуги</h1>
+  <p class="filters">
+    <a href="{% url 'agency:service_list' %}">Все</a>
+    {% for c in categories %}<a href="?category={{ c.id }}">{{ c.name }}</a>{% endfor %}
+  </p>
+  <div class="cards">
+    {% for s in services %}
+      <div class="card">
+        {% if s.image %}<img src="{{ s.image.url }}" alt="{{ s.name }}">{% endif %}
+        <h3><a href="{{ s.get_absolute_url }}">{{ s.name }}</a></h3>
+        <p>{{ s.category }} · {{ s.price }} ₽</p>
+      </div>
+    {% empty %}
+      <p>Услуг пока нет.</p>
+    {% endfor %}
+  </div>
+{% endblock %}
