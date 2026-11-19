@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block title %}Главная{% endblock %}
+{% block content %}
+  <h1>Агентство по ремонту квартир</h1>
+
+  {# ---------- Виджет 1: каталог (всем) ---------- #}
+  <section class="widget">
+    <h2>Каталог услуг</h2>
+    <div class="stats">
+      <div class="stat"><b>{{ catalog.catalog_stats.total }}</b><span>услуг в каталоге</span></div>
+      <div class="stat"><b>{{ catalog.catalog_stats.min_price|floatformat:"0g" }} ₽</b><span>минимальная цена</span></div>
+      <div class="stat"><b>{{ catalog.catalog_stats.avg_price|floatformat:"0g" }} ₽</b><span>средняя цена</span></div>
+      <div class="stat"><b>{{ catalog.catalog_stats.max_price|floatformat:"0g" }} ₽</b><span>максимальная цена</span></div>
+    </div>
+    <div class="two">
+      <div>
+        <h3>Топ услуг по выручке</h3>
+        <table>
+          <tr><th>Услуга</th><th>Категория</th><th class="num">Заказов</th><th class="num">Выручка</th></tr>
+          {% for s in catalog.top_services %}
+            <tr><td><a href="{{ s.get_absolute_url }}">{{ s.name }}</a></td><td>{{ s.category }}</td>
+                <td class="num">{{ s.orders_count }}</td><td class="num">{{ s.revenue|floatformat:"0g" }} ₽</td></tr>
+          {% empty %}<tr><td colspan="4">Заказов пока нет.</td></tr>{% endfor %}
+        </table>
+      </div>
+      <div>
+        <h3>Категории</h3>
+        <table>
+          <tr><th>Категория</th><th class="num">Услуг</th><th class="num">Средняя цена</th></tr>
+          {% for c in catalog.categories %}
+            <tr><td><a href="{% url 'agency:service_list' %}?category={{ c.id }}">{{ c.name }}</a></td>
+                <td class="num">{{ c.services_count }}</td><td class="num">{{ c.avg_price|floatformat:"0g" }} ₽</td></tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+  </section>
+
+  {# ---------- Виджет 2: заказы (вошедшим) ---------- #}
+  {% if user.is_authenticated %}
+  <section class="widget">
+    <h2>{% if is_staff_member %}Все заказы{% else %}Мои заказы{% endif %}</h2>
+    <div class="stats">
+      <div class="stat"><b>{{ orders.summary.count }}</b><span>заказов (без отменённых)</span></div>
+      <div class="stat"><b>{{ orders.summary.total|default:0|floatformat:"0g" }} ₽</b><span>общая сумма</span></div>
+      <div class="stat"><b>{{ orders.summary.avg|default:0|floatformat:"0g" }} ₽</b><span>средний чек</span></div>
+    </div>
+    <div class="two">
+      <div>
+        <h3>По статусам</h3>
+        <table>
+          <tr><th>Статус</th><th class="num">Заказов</th><th class="num">Сумма</th></tr>
+          {% for r in orders.by_status %}
+            <tr><td>{{ r.status__name }}</td><td class="num">{{ r.count }}</td><td class="num">{{ r.total|floatformat:"0g" }} ₽</td></tr>
+          {% empty %}<tr><td colspan="3">Заказов нет.</td></tr>{% endfor %}
+        </table>
+      </div>
+      <div>
+        <h3>Текущие заказы</h3>
+        <table>
+          <tr><th>№</th><th>Статус</th><th>Бригада</th><th>Начало</th><th class="num">Сумма</th><th>Размер</th></tr>
+          {% for o in orders.active %}
+            <tr><td>{{ o.pk }}</td><td>{{ o.status }}</td><td>{{ o.crew|default:"—" }}</td>
+                <td>{{ o.start_date|date:"d.m.Y"|default:"—" }}</td>
+                <td class="num">{{ o.total_cost|floatformat:"0g" }} ₽</td><td>{{ o.size }}</td></tr>
+          {% empty %}<tr><td colspan="6">Активных заказов нет.</td></tr>{% endfor %}
+        </table>
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  {# ---------- Виджет 3: бригады и финансы (суперпользователю) ---------- #}
+  {% if user.is_superuser %}
+  <section class="widget">
+    <h2>Бригады и финансы</h2>
+    <div class="stats">
+      <div class="stat"><b>{{ management.finance.revenue|default:0|floatformat:"0g" }} ₽</b><span>выручка (без отменённых)</span></div>
+      <div class="stat"><b>{{ management.finance.biggest|default:0|floatformat:"0g" }} ₽</b><span>самый крупный заказ</span></div>
+      <div class="stat"><b>{{ management.finance.big_orders }}</b><span>заказов от 100 000 ₽</span></div>
+      <div class="stat"><b>{{ management.unassigned }}</b><span>активных без бригады</span></div>
+    </div>
+    <div class="two">
+      <div>
+        <h3>Загрузка бригад</h3>
+        <table>
+          <tr><th>Бригада</th><th>Бригадир</th><th class="num">В работе</th><th class="num">Сдано</th><th class="num">Отсутствий</th></tr>
+          {% for c in management.crews %}
+            <tr><td>{{ c.name }}</td><td>{{ c.foreman|default:"—" }}</td>
+                <td class="num">{{ c.active_orders }}</td><td class="num">{{ c.done_orders }}</td><td class="num">{{ c.off_periods }}</td></tr>
+          {% endfor %}
+        </table>
+      </div>
+      <div>
+        <h3>Менеджеры</h3>
+        <table>
+          <tr><th>Менеджер</th><th class="num">Заказов</th><th class="num">Сумма</th></tr>
+          {% for m in management.managers %}
+            <tr><td>{{ m }}</td><td class="num">{{ m.orders_count }}</td><td class="num">{{ m.orders_sum|default:0|floatformat:"0g" }} ₽</td></tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+  </section>
+  {% endif %}
+{% endblock %}
