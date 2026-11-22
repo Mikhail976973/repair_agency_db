@@ -9,5 +9,11 @@
     <span class="badge text-bg-light align-self-start mb-2">{{ s.category }}</span>
     <h5 class="card-title"><a href="{{ s.get_absolute_url }}">{{ s.name }}</a></h5>
     <p class="mt-auto mb-0 fs-5 fw-bold">{{ s.price|rub }} <small class="text-muted fw-normal">за единицу</small></p>
+    {% if can_manage %}
+      <div class="d-flex gap-3 mt-2 small">
+        <a href="{% url 'agency:service_edit' s.pk %}"><i class="bi bi-pencil"></i> изменить</a>
+        <a href="{% url 'agency:service_delete' s.pk %}" class="text-danger"><i class="bi bi-trash"></i> удалить</a>
+      </div>
+    {% endif %}
   </div>
 </div>

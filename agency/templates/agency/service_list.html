@@ -21,6 +21,14 @@
   <section class="section">
     <div class="container">
 
+      {% include 'agency/_messages.html' %}
+
+      {% if can_manage %}
+        <div class="d-flex justify-content-end mb-3">
+          <a href="{% url 'agency:service_create' %}" class="btn btn-success"><i class="bi bi-plus-lg"></i> Добавить услугу</a>
+        </div>
+      {% endif %}
+
       <form method="get" class="mb-4">
         {% if current_category %}<input type="hidden" name="category" value="{{ current_category }}">{% endif %}
         <div class="input-group">

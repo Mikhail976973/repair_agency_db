@@ -21,6 +21,7 @@
 {% block content %}
   <section class="section">
     <div class="container">
+      {% include 'agency/_messages.html' %}
       <div class="row g-4 align-items-start">
         <div class="col-lg-6">
           {% if service.image %}
@@ -43,10 +44,40 @@
                 <li><i class="bi bi-person-check text-primary"></i> Изменил: {{ service.updated_by }}</li>
               {% endif %}
             </ul>
-            <a href="{% url 'agency:service_list' %}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Ко всем услугам</a>
+            <div class="d-flex flex-wrap gap-2">
+              <a href="{% url 'agency:service_list' %}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Ко всем услугам</a>
+              {% if can_manage %}
+                <a href="{% url 'agency:service_edit' service.pk %}" class="btn btn-primary"><i class="bi bi-pencil"></i> Редактировать</a>
+                <a href="{% url 'agency:service_delete' service.pk %}" class="btn btn-outline-danger"><i class="bi bi-trash"></i> Удалить</a>
+              {% endif %}
+            </div>
           </div>
         </div>
       </div>
+
+      {% if can_manage %}
+        <h3 class="mt-5 mb-3">В каких заказах эта услуга</h3>
+        {% if order_items %}
+          <div class="table-responsive panel p-0">
+            <table class="table align-middle mb-0">
+              <thead><tr><th>Заказ</th><th>Клиент</th><th>Статус</th><th class="text-end">Количество</th><th class="text-end">Сумма</th></tr></thead>
+              <tbody>
+                {% for item in order_items %}
+                  <tr>
+                    <td>№{{ item.order.pk }} от {{ item.order.created_at|date:"d.m.Y" }}</td>
+                    <td>{{ item.order.contact_name }}</td>
+                    <td><span class="badge text-bg-light">{{ item.order.status }}</span></td>
+                    <td class="text-end">{{ item.quantity|floatformat:"-2" }}</td>
+                    <td class="text-end text-nowrap">{{ item.unit_price|rub }} за ед.</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <div class="alert alert-light">Эту услугу пока никто не заказывал. Её можно безопасно удалить.</div>
+        {% endif %}
+      {% endif %}
 
       {% if related %}
         <h3 class="mt-5 mb-3">Другие услуги категории «{{ service.category }}»</h3>

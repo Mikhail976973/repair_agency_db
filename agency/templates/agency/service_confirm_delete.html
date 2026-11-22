@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static agency_extras %}
+{% block title %}Удаление услуги{% endblock %}
+
+{% block page_title %}
+  <div class="page-title dark-background" style="background-image: url({% static 'img/bg/bg-2.webp' %});">
+    <div class="container position-relative">
+      <h1>Удаление услуги</h1>
+      <nav class="breadcrumbs">
+        <ol>
+          <li><a href="{% url 'agency:dashboard' %}">Главная</a></li>
+          <li><a href="{% url 'agency:service_list' %}">Услуги</a></li>
+          <li><a href="{{ service.get_absolute_url }}">{{ service.name }}</a></li>
+          <li class="current">Удаление</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+{% endblock %}
+
+{% block content %}
+  <section class="section">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-6">
+          <div class="panel">
+            <h3 class="mb-3">Удалить «{{ service.name }}»?</h3>
+            <p class="text-muted">Категория: {{ service.category }}, цена {{ service.price|rub }}. Это действие нельзя отменить.</p>
+            {% if orders_count %}
+              <div class="alert alert-warning">
+                Эта услуга есть в {{ orders_count }} {{ orders_count|ru_plural:"заказе,заказах,заказах" }}, поэтому удалить её не получится.
+              </div>
+            {% endif %}
+            <form method="post" class="d-flex gap-2">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Удалить</button>
+              <a href="{{ service.get_absolute_url }}" class="btn btn-outline-secondary">Отмена</a>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
