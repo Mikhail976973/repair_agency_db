@@ -1,9 +1,61 @@
 {% extends 'base.html' %}
+{% load static agency_extras %}
 {% block title %}{{ service.name }}{% endblock %}
+
+{% block page_title %}
+  <div class="page-title dark-background" style="background-image: url({% static 'img/bg/bg-2.webp' %});">
+    <div class="container position-relative">
+      <h1>{{ service.name }}</h1>
+      <p>{{ service.category }}</p>
+      <nav class="breadcrumbs">
+        <ol>
+          <li><a href="{% url 'agency:dashboard' %}">Главная</a></li>
+          <li><a href="{% url 'agency:service_list' %}">Услуги</a></li>
+          <li class="current">{{ service.name }}</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+{% endblock %}
+
 {% block content %}
-  <h1>{{ service.name }}</h1>
-  {% if service.image %}<img src="{{ service.image.url }}" alt="{{ service.name }}" style="max-width:100%">{% endif %}
-  <p>Категория: {{ service.category }}</p>
-  <p>Цена: {{ service.price }} ₽</p>
-  <p><a href="{% url 'agency:service_list' %}">← Ко всем услугам</a></p>
+  <section class="section">
+    <div class="container">
+      <div class="row g-4 align-items-start">
+        <div class="col-lg-6">
+          {% if service.image %}
+            <img src="{{ service.image.url }}" alt="{{ service.name }}" class="img-fluid rounded shadow-sm">
+          {% else %}
+            <div class="service-placeholder rounded" style="height:320px"><i class="bi bi-tools"></i></div>
+          {% endif %}
+        </div>
+        <div class="col-lg-6">
+          <div class="panel">
+            <span class="badge text-bg-light mb-2">{{ service.category }}</span>
+            <h2 class="mb-3">{{ service.name }}</h2>
+            <p class="display-6 fw-bold text-nowrap">{{ service.price|rub }} <small class="fs-6 text-muted fw-normal">за единицу</small></p>
+            <ul class="list-unstyled mb-4">
+              <li class="mb-2"><i class="bi bi-clipboard-check text-primary"></i>
+                  Заказана в {{ orders_count }} {{ orders_count|ru_plural:"заказе,заказах,заказах" }}</li>
+              <li class="mb-2"><i class="bi bi-clock-history text-primary"></i>
+                  Цена обновлена {{ service.updated_at|date:"d.m.Y" }}</li>
+              {% if service.updated_by %}
+                <li><i class="bi bi-person-check text-primary"></i> Изменил: {{ service.updated_by }}</li>
+              {% endif %}
+            </ul>
+            <a href="{% url 'agency:service_list' %}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Ко всем услугам</a>
+          </div>
+        </div>
+      </div>
+
+      {% if related %}
+        <h3 class="mt-5 mb-3">Другие услуги категории «{{ service.category }}»</h3>
+        <div class="row g-4">
+          {% for s in related %}
+            <div class="col-md-6 col-lg-4">{% include 'agency/_service_card.html' %}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </section>
 {% endblock %}

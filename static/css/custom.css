@@ -1,0 +1,35 @@
+/* Свои стили проекта поверх main.css шаблона LeadPage */
+.header .user-name { color: #fff; font-size: 14px; display: inline-flex; align-items: center; gap: 6px; }
+.header .btn-outline-light { --bs-btn-padding-y: .2rem; --bs-btn-font-size: .85rem; }
+
+.stat-card {
+  display: flex; align-items: center; gap: 14px; height: 100%;
+  background: var(--surface-color); border-radius: 12px; padding: 18px 20px;
+  box-shadow: 0 2px 20px color-mix(in srgb, var(--default-color), transparent 94%);
+}
+.stat-card .stat-icon {
+  flex: none; width: 48px; height: 48px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center; font-size: 22px;
+  color: var(--accent-color); background: color-mix(in srgb, var(--accent-color), transparent 88%);
+}
+.stat-card b { display: block; font-size: 22px; line-height: 1.2; color: var(--heading-color); }
+.stat-card span.label { font-size: 13px; color: color-mix(in srgb, var(--default-color), transparent 35%); }
+
+.panel {
+  background: var(--surface-color); border-radius: 12px; padding: 22px;
+  box-shadow: 0 2px 20px color-mix(in srgb, var(--default-color), transparent 94%); height: 100%;
+}
+.panel h3 { font-size: 18px; margin-bottom: 14px; }
+.chart-box { position: relative; height: 300px; }
+
+.service-card { border: 0; border-radius: 12px; overflow: hidden; }
+.service-card .card-img-top { height: 180px; object-fit: cover; }
+.service-card .card-title a { color: var(--heading-color); text-decoration: none; }
+.service-card .card-title a:hover { color: var(--accent-color); }
+.service-placeholder {
+  height: 180px; display: flex; align-items: center; justify-content: center; font-size: 48px;
+  color: var(--accent-color); background: color-mix(in srgb, var(--accent-color), transparent 90%);
+}
+.table > :not(caption) > * > * { background-color: transparent; }
+.rank { display: inline-flex; width: 26px; height: 26px; border-radius: 50%; align-items: center;
+  justify-content: center; font-size: 13px; font-weight: 700; color: #fff; background: var(--accent-color); flex: none; }

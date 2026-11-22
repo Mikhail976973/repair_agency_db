@@ -1,20 +1,56 @@
 {% extends 'base.html' %}
+{% load static agency_extras %}
 {% block title %}Услуги{% endblock %}
-{% block content %}
-  <h1>Наши услуги</h1>
-  <p class="filters">
-    <a href="{% url 'agency:service_list' %}">Все</a>
-    {% for c in categories %}<a href="?category={{ c.id }}">{{ c.name }}</a>{% endfor %}
-  </p>
-  <div class="cards">
-    {% for s in services %}
-      <div class="card">
-        {% if s.image %}<img src="{{ s.image.url }}" alt="{{ s.name }}">{% endif %}
-        <h3><a href="{{ s.get_absolute_url }}">{{ s.name }}</a></h3>
-        <p>{{ s.category }} · {{ s.price }} ₽</p>
-      </div>
-    {% empty %}
-      <p>Услуг пока нет.</p>
-    {% endfor %}
+
+{% block page_title %}
+  <div class="page-title dark-background" style="background-image: url({% static 'img/bg/bg-2.webp' %});">
+    <div class="container position-relative">
+      <h1>Наши услуги</h1>
+      <p>Выберите нужные работы: цена указана за единицу измерения</p>
+      <nav class="breadcrumbs">
+        <ol>
+          <li><a href="{% url 'agency:dashboard' %}">Главная</a></li>
+          <li class="current">Услуги</li>
+        </ol>
+      </nav>
+    </div>
   </div>
+{% endblock %}
+
+{% block content %}
+  <section class="section">
+    <div class="container">
+
+      <form method="get" class="mb-4">
+        {% if current_category %}<input type="hidden" name="category" value="{{ current_category }}">{% endif %}
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-search"></i></span>
+          <input type="search" name="q" value="{{ q }}" class="form-control" placeholder="Поиск по названию или категории">
+          <button class="btn btn-primary" type="submit">Найти</button>
+          {% if q or current_category %}<a class="btn btn-outline-secondary" href="{% url 'agency:service_list' %}">Сбросить</a>{% endif %}
+        </div>
+      </form>
+
+      <ul class="nav nav-pills mb-4 gap-1">
+        <li class="nav-item"><a class="nav-link {% if not current_category %}active{% endif %}" href="{% url 'agency:service_list' %}{% if q %}?q={{ q|urlencode }}{% endif %}">Все</a></li>
+        {% for c in categories %}
+          <li class="nav-item">
+            <a class="nav-link {% if current_category == c.id|stringformat:'s' %}active{% endif %}"
+               href="?category={{ c.id }}{% if q %}&q={{ q|urlencode }}{% endif %}">{{ c.name }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+
+      <p class="text-muted">Найдено: {{ services|length }} {{ services|length|ru_plural:"услуга,услуги,услуг" }}</p>
+
+      <div class="row g-4">
+        {% for s in services %}
+          <div class="col-md-6 col-lg-4">{% include 'agency/_service_card.html' %}</div>
+        {% empty %}
+          <div class="col-12"><div class="alert alert-light">По вашему запросу ничего не найдено.</div></div>
+        {% endfor %}
+      </div>
+
+    </div>
+  </section>
 {% endblock %}

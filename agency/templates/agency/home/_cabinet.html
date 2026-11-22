@@ -1,0 +1,64 @@
+{% load agency_extras %}
+<section id="cabinet" class="section">
+
+  <div class="container section-title" data-aos="fade-up">
+    <span class="subtitle">Заказы</span>
+    <h2>{% if is_staff_member %}Все заказы{% else %}Мои заказы{% endif %}</h2>
+    <p>{% if is_staff_member %}Сводка по всем заказам агентства{% else %}Только заказы, оформленные на вас{% endif %}</p>
+  </div>
+
+  <div class="container">
+
+    <div class="row g-3 mb-4">
+      <div class="col-md-4">{% stat_card 'bi-clipboard-check' orders.summary.count 'заказов (без отменённых)' %}</div>
+      <div class="col-md-4">{% stat_card 'bi-cash-stack' orders.summary.total|rub 'общая сумма' %}</div>
+      <div class="col-md-4">{% stat_card 'bi-receipt' orders.summary.avg|rub 'средний чек' %}</div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-5">
+        <div class="panel">
+          <h3><i class="bi bi-pie-chart"></i> По статусам</h3>
+          <div class="chart-box" style="height:240px"><canvas id="chart-statuses"></canvas></div>
+          <table class="table table-sm align-middle mt-3 mb-0">
+            <thead><tr><th>Статус</th><th class="text-end">Заказов</th><th class="text-end">Сумма</th></tr></thead>
+            <tbody>
+              {% for r in orders.by_status %}
+                <tr><td>{{ r.status__name }}</td><td class="text-end">{{ r.count }}</td><td class="text-end">{{ r.total|rub }}</td></tr>
+              {% empty %}
+                <tr><td colspan="3">Заказов нет.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="col-lg-7">
+        <div class="panel">
+          <h3><i class="bi bi-hammer"></i> Текущие заказы</h3>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead><tr><th>№</th><th>Статус</th><th>Бригада</th><th>Начало</th><th>Создан</th><th class="text-end">Сумма</th><th>Размер</th></tr></thead>
+              <tbody>
+                {% for o in orders.active %}
+                  <tr>
+                    <td>{{ o.pk }}</td>
+                    <td>{{ o.status }}</td>
+                    <td>{{ o.crew|default:"—" }}</td>
+                    <td>{{ o.start_date|date:"d.m.Y"|default:"—" }}</td>
+                    <td class="small text-muted">{{ o.created_at|timesince }} назад</td>
+                    <td class="text-end">{{ o.total_cost|rub }}</td>
+                    <td><span class="badge {% if o.size == 'крупный' %}text-bg-danger{% elif o.size == 'средний' %}text-bg-warning{% else %}text-bg-secondary{% endif %}">{{ o.size }}</span></td>
+                  </tr>
+                {% empty %}
+                  <tr><td colspan="7">Активных заказов нет.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

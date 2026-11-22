@@ -1,0 +1,186 @@
+{% load static %}
+<!-- Portfolio Section -->
+    <section id="portfolio" class="portfolio section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <span class="subtitle">Портфолио</span>
+        <h2>Наши работы</h2>
+        <p>Примеры квартир, которые мы отремонтировали: от косметического обновления до капитального ремонта</p>
+      </div><!-- End Section Title -->
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="isotope-layout" data-default-filter="*" data-layout="fitRows" data-sort="original-order">
+
+          <div class="portfolio-filters-wrapper" data-aos="fade-up" data-aos-delay="100">
+            <ul class="portfolio-filters isotope-filters">
+              <li data-filter="*" class="filter-active">Все работы</li>
+              <li data-filter=".filter-cosmetic">Косметический</li>
+              <li data-filter=".filter-capital">Капитальный</li>
+              <li data-filter=".filter-bath">Ванные</li>
+              <li data-filter=".filter-kitchen">Кухни</li>
+            </ul>
+          </div>
+
+          <div class="row gy-4 portfolio-grid isotope-container" data-aos="fade-up" data-aos-delay="200">
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-cosmetic">
+              <div class="portfolio-card">
+                <div class="image-container">
+                  <img src="{% static 'img/site/work-1-spalnya.webp' %}" class="img-fluid" alt="Спальня, 14 м²" loading="lazy">
+                  <div class="overlay">
+                    <div class="overlay-content">
+                      <a href="{% static 'img/site/work-1-spalnya.webp' %}" class="glightbox zoom-link" title="Спальня, 14 м²">
+                        <i class="bi bi-zoom-in"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="content">
+                  <h3>Спальня, 14 м²</h3>
+                  <p>Косметический ремонт: обои, покраска, ламинат</p>
+                </div>
+              </div>
+            </div><!-- End Portfolio Item -->
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-bath">
+              <div class="portfolio-card">
+                <div class="image-container">
+                  <img src="{% static 'img/site/work-2-vannaya.webp' %}" class="img-fluid" alt="Ванная комната" loading="lazy">
+                  <div class="overlay">
+                    <div class="overlay-content">
+                      <a href="{% static 'img/site/work-2-vannaya.webp' %}" class="glightbox zoom-link" title="Ванная комната">
+                        <i class="bi bi-zoom-in"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="content">
+                  <h3>Ванная комната</h3>
+                  <p>Плитка, душевая, тёплый пол</p>
+                </div>
+              </div>
+            </div><!-- End Portfolio Item -->
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-kitchen">
+              <div class="portfolio-card">
+                <div class="image-container">
+                  <img src="{% static 'img/site/work-3-kuhnya.webp' %}" class="img-fluid" alt="Кухня-гостиная" loading="lazy">
+                  <div class="overlay">
+                    <div class="overlay-content">
+                      <a href="{% static 'img/site/work-3-kuhnya.webp' %}" class="glightbox zoom-link" title="Кухня-гостиная">
+                        <i class="bi bi-zoom-in"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="content">
+                  <h3>Кухня-гостиная</h3>
+                  <p>Электрика, розетки, фартук из плитки</p>
+                </div>
+              </div>
+            </div><!-- End Portfolio Item -->
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-capital">
+              <div class="portfolio-card">
+                <div class="image-container">
+                  <img src="{% static 'img/site/work-4-trehkomnatnaya.webp' %}" class="img-fluid" alt="Трёхкомнатная квартира, 78 м²" loading="lazy">
+                  <div class="overlay">
+                    <div class="overlay-content">
+                      <a href="{% static 'img/site/work-4-trehkomnatnaya.webp' %}" class="glightbox zoom-link" title="Трёхкомнатная квартира, 78 м²">
+                        <i class="bi bi-zoom-in"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="content">
+                  <h3>Трёхкомнатная квартира, 78 м²</h3>
+                  <p>Капитальный ремонт под ключ за 62 дня</p>
+                </div>
+              </div>
+            </div><!-- End Portfolio Item -->
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-bath">
+              <div class="portfolio-card">
+                <div class="image-container">
+                  <img src="{% static 'img/site/work-5-sanuzel.webp' %}" class="img-fluid" alt="Совмещённый санузел" loading="lazy">
+                  <div class="overlay">
+                    <div class="overlay-content">
+                      <a href="{% static 'img/site/work-5-sanuzel.webp' %}" class="glightbox zoom-link" title="Совмещённый санузел">
+                        <i class="bi bi-zoom-in"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="content">
+                  <h3>Совмещённый санузел</h3>
+                  <p>Замена труб, установка ванны, затирка швов</p>
+                </div>
+              </div>
+            </div><!-- End Portfolio Item -->
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-kitchen">
+              <div class="portfolio-card">
+                <div class="image-container">
+                  <img src="{% static 'img/site/work-6-kuhnya-svetlaya.webp' %}" class="img-fluid" alt="Кухня в светлых тонах" loading="lazy">
+                  <div class="overlay">
+                    <div class="overlay-content">
+                      <a href="{% static 'img/site/work-6-kuhnya-svetlaya.webp' %}" class="glightbox zoom-link" title="Кухня в светлых тонах">
+                        <i class="bi bi-zoom-in"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="content">
+                  <h3>Кухня в светлых тонах</h3>
+                  <p>Новая проводка, натяжной потолок</p>
+                </div>
+              </div>
+            </div><!-- End Portfolio Item -->
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-cosmetic">
+              <div class="portfolio-card">
+                <div class="image-container">
+                  <img src="{% static 'img/site/work-7-koridor.webp' %}" class="img-fluid" alt="Прихожая и коридор" loading="lazy">
+                  <div class="overlay">
+                    <div class="overlay-content">
+                      <a href="{% static 'img/site/work-7-koridor.webp' %}" class="glightbox zoom-link" title="Прихожая и коридор">
+                        <i class="bi bi-zoom-in"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="content">
+                  <h3>Прихожая и коридор</h3>
+                  <p>Шпаклёвка, покраска, межкомнатные двери</p>
+                </div>
+              </div>
+            </div><!-- End Portfolio Item -->
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-capital">
+              <div class="portfolio-card">
+                <div class="image-container">
+                  <img src="{% static 'img/site/work-8-novostroyka.webp' %}" class="img-fluid" alt="Квартира в новостройке" loading="lazy">
+                  <div class="overlay">
+                    <div class="overlay-content">
+                      <a href="{% static 'img/site/work-8-novostroyka.webp' %}" class="glightbox zoom-link" title="Квартира в новостройке">
+                        <i class="bi bi-zoom-in"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="content">
+                  <h3>Квартира в новостройке</h3>
+                  <p>Чистовая отделка: штукатурка, полы, потолки</p>
+                </div>
+              </div>
+            </div><!-- End Portfolio Item -->
+
+          </div><!-- End Portfolio Grid -->
+
+        </div>
+
+      </div>
+
+    </section><!-- /Portfolio Section -->

@@ -1,0 +1,377 @@
+{% load static %}
+<!-- Process Section -->
+    <section id="process" class="features section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <span class="subtitle">Этапы работы</span>
+        <h2>Как мы работаем</h2>
+        <p>Весь путь от заявки до готовой квартиры: пять понятных шагов</p>
+      </div><!-- End Section Title -->
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="tabs-wrapper">
+          <div class="tabs-header" data-aos="fade-up" data-aos-delay="200">
+            <ul class="nav nav-tabs">
+              <li class="nav-item">
+                <a class="nav-link active show" data-bs-toggle="tab" data-bs-target="#features-tab-1">
+                  <div class="tab-content-preview">
+                    <span class="tab-number">01</span>
+                    <div class="tab-text">
+                      <h6>Заявка</h6>
+                      <small>Вы оставляете</small>
+                    </div>
+                  </div>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" data-bs-target="#features-tab-2">
+                  <div class="tab-content-preview">
+                    <span class="tab-number">02</span>
+                    <div class="tab-text">
+                      <h6>Замер</h6>
+                      <small>Мастер приезжает</small>
+                    </div>
+                  </div>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" data-bs-target="#features-tab-3">
+                  <div class="tab-content-preview">
+                    <span class="tab-number">03</span>
+                    <div class="tab-text">
+                      <h6>Смета и договор</h6>
+                      <small>Согласование</small>
+                    </div>
+                  </div>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" data-bs-target="#features-tab-4">
+                  <div class="tab-content-preview">
+                    <span class="tab-number">04</span>
+                    <div class="tab-text">
+                      <h6>Ремонт</h6>
+                      <small>Бригада работает</small>
+                    </div>
+                  </div>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" data-bs-target="#features-tab-5">
+                  <div class="tab-content-preview">
+                    <span class="tab-number">05</span>
+                    <div class="tab-text">
+                      <h6>Сдача</h6>
+                      <small>Ремонт готов</small>
+                    </div>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="tab-content" data-aos="fade-up" data-aos-delay="300">
+
+            <div class="tab-pane fade active show" id="features-tab-1">
+              <div class="row align-items-center">
+                <div class="col-lg-6">
+                  <div class="content-area">
+                    <div class="content-badge">
+                      <i class="bi bi-pencil-square"></i>
+                      <span>Шаг 1 · Заявка</span>
+                    </div>
+                    <h3>Оставляете заявку на сайте</h3>
+                    <p>Выбираете нужные услуги и объём работ, указываете имя и телефон. Заявка сразу попадает к менеджеру, и вам не нужно ничего рассчитывать самостоятельно.</p>
+
+                    <div class="highlight-stats">
+                      <div class="stat-item">
+                        <span class="stat-value">2 мин</span>
+                        <span class="stat-label">на заполнение заявки</span>
+                      </div>
+                      <div class="stat-item">
+                        <span class="stat-value">30 мин</span>
+                        <span class="stat-label">ответ менеджера</span>
+                      </div>
+                    </div>
+
+                    <div class="feature-points">
+                      <div class="point-item">
+                        <i class="bi bi-arrow-right"></i>
+                        <span>Выбор услуг и количества прямо на сайте</span>
+                      </div>
+                      <div class="point-item">
+                        <i class="bi bi-arrow-right"></i>
+                        <span>Предварительная стоимость сразу видна</span>
+                      </div>
+                      <div class="point-item">
+                        <i class="bi bi-arrow-right"></i>
+                        <span>Регистрация не нужна</span>
+                      </div>
+                    </div>
+
+                    <a href="#order" class="explore-link">
+                      Оставить заявку <i class="bi bi-arrow-up-right"></i>
+                    </a>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="visual-content">
+                    <img src="{% static 'img/site/step-1-zayavka.webp' %}" alt="Заявка" class="img-fluid">
+                    <div class="floating-element">
+                      <div class="floating-card">
+                        <i class="bi bi-telephone-inbound"></i>
+                        <div class="card-info">
+                          <span>Связь</span>
+                          <strong>В течение 30 минут</strong>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="features-tab-2">
+              <div class="row align-items-center">
+                <div class="col-lg-6">
+                  <div class="content-area">
+                    <div class="content-badge">
+                      <i class="bi bi-rulers"></i>
+                      <span>Шаг 2 · Замер</span>
+                    </div>
+                    <h3>Мастер приезжает на бесплатный замер</h3>
+                    <p>Менеджер согласует удобное время, и мастер приезжает в квартиру: измеряет помещения, оценивает состояние стен, пола и коммуникаций и уточняет ваши пожелания.</p>
+
+                    <div class="highlight-stats">
+                      <div class="stat-item">
+                        <span class="stat-value">0 ₽</span>
+                        <span class="stat-label">стоимость выезда</span>
+                      </div>
+                      <div class="stat-item">
+                        <span class="stat-value">1–2 дня</span>
+                        <span class="stat-label">до приезда мастера</span>
+                      </div>
+                    </div>
+
+                    <div class="feature-points">
+                      <div class="point-item">
+                        <i class="bi bi-arrow-right"></i>
+                        <span>Замер всех помещений</span>
+                      </div>
+                      <div class="point-item">
+                        <i class="bi bi-arrow-right"></i>
+                        <span>Оценка состояния стен, пола и проводки</span>
+                      </div>
+                      <div class="point-item">
+                        <i class="bi bi-arrow-right"></i>
+                        <span>Обсуждение материалов и сроков</span>
+                      </div>
+                    </div>
+
+                    <a href="#order" class="explore-link">
+                      Оставить заявку <i class="bi bi-arrow-up-right"></i>
+                    </a>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="visual-content">
+                    <img src="{% static 'img/site/step-2-zamer.webp' %}" alt="Замер" class="img-fluid">
+                    <div class="floating-element">
+                      <div class="floating-card">
+                        <i class="bi bi-geo-alt"></i>
+                        <div class="card-info">
+                          <span>Выезд</span>
+                          <strong>Бесплатно</strong>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="features-tab-3">
+              <div class="row align-items-center">
+                <div class="col-lg-6">
+                  <div class="content-area">
+                    <div class="content-badge">
+                      <i class="bi bi-file-earmark-text"></i>
+                      <span>Шаг 3 · Согласование</span>
+                    </div>
+                    <h3>Согласовываем смету и подписываем договор</h3>
+                    <p>По итогам замера составляется подробная смета: каждая услуга, объём и цена. Мы согласуем её с вами, подписываем договор и закупаем материалы. Стоимость и сроки фиксируются.</p>
+
+                    <div class="highlight-stats">
+                      <div class="stat-item">
+                        <span class="stat-value">100%</span>
+                        <span class="stat-label">работ прописано в договоре</span>
+                      </div>
+                      <div class="stat-item">
+                        <span class="stat-value">0 ₽</span>
+                        <span class="stat-label">скрытых доплат</span>
+                      </div>
+                    </div>
+
+                    <div class="feature-points">
+                      <div class="point-item">
+                        <i class="bi bi-arrow-right"></i>
+                        <span>Смета по каждой услуге</span>
+                      </div>
+                      <div class="point-item">
+                        <i class="bi bi-arrow-right"></i>
+                        <span>Дата начала и срок работ в договоре</span>
+                      </div>
+                      <div class="point-item">
+                        <i class="bi bi-arrow-right"></i>
+                        <span>Закупка материалов по согласованному списку</span>
+                      </div>
+                    </div>
+
+                    <a href="#order" class="explore-link">
+                      Оставить заявку <i class="bi bi-arrow-up-right"></i>
+                    </a>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="visual-content">
+                    <img src="{% static 'img/site/step-3-smeta-dogovor.webp' %}" alt="Смета и договор" class="img-fluid">
+                    <div class="floating-element">
+                      <div class="floating-card">
+                        <i class="bi bi-cash-coin"></i>
+                        <div class="card-info">
+                          <span>Цена</span>
+                          <strong>Как в договоре</strong>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="features-tab-4">
+              <div class="row align-items-center">
+                <div class="col-lg-6">
+                  <div class="content-area">
+                    <div class="content-badge">
+                      <i class="bi bi-tools"></i>
+                      <span>Шаг 4 · Работы</span>
+                    </div>
+                    <h3>Бригада выполняет ремонт по графику</h3>
+                    <p>Назначается свободная бригада, и работы идут по этапам: демонтаж, черновые работы, чистовая отделка. Бригады не пересекаются между объектами, поэтому сроки не срываются.</p>
+
+                    <div class="highlight-stats">
+                      <div class="stat-item">
+                        <span class="stat-value">12</span>
+                        <span class="stat-label">бригад в штате</span>
+                      </div>
+                      <div class="stat-item">
+                        <span class="stat-value">45 дней</span>
+                        <span class="stat-label">средний срок ремонта</span>
+                      </div>
+                    </div>
+
+                    <div class="feature-points">
+                      <div class="point-item">
+                        <i class="bi bi-arrow-right"></i>
+                        <span>Демонтаж и черновые работы</span>
+                      </div>
+                      <div class="point-item">
+                        <i class="bi bi-arrow-right"></i>
+                        <span>Чистовая отделка: полы, стены, потолки</span>
+                      </div>
+                      <div class="point-item">
+                        <i class="bi bi-arrow-right"></i>
+                        <span>Менеджер на связи на каждом этапе</span>
+                      </div>
+                    </div>
+
+                    <a href="#order" class="explore-link">
+                      Оставить заявку <i class="bi bi-arrow-up-right"></i>
+                    </a>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="visual-content">
+                    <img src="{% static 'img/site/step-4-remont.webp' %}" alt="Ремонт" class="img-fluid">
+                    <div class="floating-element">
+                      <div class="floating-card">
+                        <i class="bi bi-people"></i>
+                        <div class="card-info">
+                          <span>Бригада</span>
+                          <strong>Назначается под заказ</strong>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="features-tab-5">
+              <div class="row align-items-center">
+                <div class="col-lg-6">
+                  <div class="content-area">
+                    <div class="content-badge">
+                      <i class="bi bi-key"></i>
+                      <span>Шаг 5 · Сдача</span>
+                    </div>
+                    <h3>Принимаете готовую квартиру с гарантией</h3>
+                    <p>Вместе с менеджером вы осматриваете результат. Если есть замечания, мы устраняем их до подписания акта. После сдачи на все работы действует гарантия.</p>
+
+                    <div class="highlight-stats">
+                      <div class="stat-item">
+                        <span class="stat-value">3 года</span>
+                        <span class="stat-label">гарантия на работы</span>
+                      </div>
+                      <div class="stat-item">
+                        <span class="stat-value">24 ч</span>
+                        <span class="stat-label">реакция на обращение</span>
+                      </div>
+                    </div>
+
+                    <div class="feature-points">
+                      <div class="point-item">
+                        <i class="bi bi-arrow-right"></i>
+                        <span>Приёмка вместе с вами</span>
+                      </div>
+                      <div class="point-item">
+                        <i class="bi bi-arrow-right"></i>
+                        <span>Акт подписывается после проверки</span>
+                      </div>
+                      <div class="point-item">
+                        <i class="bi bi-arrow-right"></i>
+                        <span>Бесплатное устранение недочётов</span>
+                      </div>
+                    </div>
+
+                    <a href="#order" class="explore-link">
+                      Оставить заявку <i class="bi bi-arrow-up-right"></i>
+                    </a>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="visual-content">
+                    <img src="{% static 'img/site/step-5-sdacha.webp' %}" alt="Сдача" class="img-fluid">
+                    <div class="floating-element">
+                      <div class="floating-card">
+                        <i class="bi bi-patch-check"></i>
+                        <div class="card-info">
+                          <span>Результат</span>
+                          <strong>Квартира готова</strong>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </section><!-- /Process Section -->

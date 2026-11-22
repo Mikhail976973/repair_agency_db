@@ -1,0 +1,73 @@
+{% load agency_extras %}
+<section id="catalog" class="section">
+
+  <div class="container section-title" data-aos="fade-up">
+    <span class="subtitle">Каталог</span>
+    <h2>Услуги и цены</h2>
+    <p>В каталоге {{ catalog.catalog_stats.total }} {{ catalog.catalog_stats.total|ru_plural:"услуга,услуги,услуг" }}
+       в {{ catalog.categories|length }} {{ catalog.categories|length|ru_plural:"категории,категориях,категориях" }}</p>
+  </div>
+
+  <div class="container">
+
+    <div class="row g-3 mb-4" data-aos="fade-up">
+      <div class="col-6 col-lg-3">{% stat_card 'bi-grid-3x3-gap' catalog.catalog_stats.total 'услуг в каталоге' %}</div>
+      <div class="col-6 col-lg-3">{% stat_card 'bi-arrow-down-circle' catalog.catalog_stats.min_price|rub 'минимальная цена' %}</div>
+      <div class="col-6 col-lg-3">{% stat_card 'bi-calculator' catalog.catalog_stats.avg_price|rub 'средняя цена' %}</div>
+      <div class="col-6 col-lg-3">{% stat_card 'bi-arrow-up-circle' catalog.catalog_stats.max_price|rub 'максимальная цена' %}</div>
+    </div>
+
+    <form action="{% url 'agency:service_list' %}" method="get" class="mb-4" data-aos="fade-up">
+      <div class="input-group input-group-lg">
+        <span class="input-group-text"><i class="bi bi-search"></i></span>
+        <input type="search" name="q" class="form-control" placeholder="Найти услугу: плитка, розетки, потолок…">
+        <button class="btn btn-primary" type="submit">Найти</button>
+      </div>
+    </form>
+
+    <div class="row g-4">
+      <div class="col-lg-5" data-aos="fade-up">
+        <div class="panel">
+          <h3><i class="bi bi-trophy"></i> Популярные услуги</h3>
+          <ul class="list-group list-group-flush">
+            {% for s in catalog.top_services %}
+              <li class="list-group-item d-flex align-items-center gap-3 px-0">
+                <span class="rank">{{ forloop.counter }}</span>
+                <div class="flex-grow-1">
+                  <a href="{{ s.get_absolute_url }}" class="fw-semibold">{{ s.name }}</a>
+                  <div class="small text-muted">{{ s.category }} · {{ s.orders_count }} {{ s.orders_count|ru_plural:"заказ,заказа,заказов" }}</div>
+                </div>
+                <span class="badge text-bg-light">{{ s.revenue|rub }}</span>
+              </li>
+            {% empty %}
+              <li class="list-group-item px-0">Заказов пока нет.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+
+      <div class="col-lg-7" data-aos="fade-up" data-aos-delay="100">
+        <div class="panel">
+          <h3><i class="bi bi-bar-chart-line"></i> Заказы по категориям услуг</h3>
+          <div class="chart-box"><canvas id="chart-categories"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel mt-4" data-aos="fade-up">
+      <h3><i class="bi bi-tags"></i> Категории</h3>
+      <div class="d-flex flex-wrap gap-2">
+        {% for c in catalog.categories %}
+          <a href="{% url 'agency:service_list' %}?category={{ c.id }}"
+             class="badge rounded-pill fs-6 fw-normal text-decoration-none {% cycle 'text-bg-primary' 'text-bg-secondary' 'text-bg-dark' %}">
+            {{ c.name }} · {{ c.services_count }} · от {{ c.avg_price|rub }}
+          </a>
+        {% endfor %}
+      </div>
+      <div class="mt-4">
+        <a href="{% url 'agency:service_list' %}" class="btn btn-primary">Все услуги <i class="bi bi-arrow-right"></i></a>
+      </div>
+    </div>
+
+  </div>
+</section>

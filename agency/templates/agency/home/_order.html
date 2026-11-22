@@ -1,0 +1,108 @@
+{% load agency_extras %}
+<section id="order" class="section">
+
+  <div class="container section-title" data-aos="fade-up">
+    <span class="subtitle">Заявка</span>
+    <h2>Оставить заявку на ремонт</h2>
+    <p>Выберите услуги, укажите объём — сумма посчитается сама. Менеджер перезвонит и уточнит детали.</p>
+  </div>
+
+  <div class="container">
+
+    {# Сообщения Django (messages) показываем здесь: после отправки сюда ведёт редирект #}
+    {% for message in messages %}
+      <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} d-flex gap-2" role="alert">
+        <i class="bi bi-check-circle-fill"></i><div>{{ message }}</div>
+      </div>
+    {% endfor %}
+
+    <form method="post" action="{% url 'agency:dashboard' %}#order" id="order-form" novalidate>
+      {% csrf_token %}
+
+      {% if order_form.non_field_errors %}
+        <div class="alert alert-danger">
+          {% for e in order_form.non_field_errors %}<div>{{ e }}</div>{% endfor %}
+        </div>
+      {% endif %}
+
+      <div class="row g-4">
+        <div class="col-lg-8" data-aos="fade-up">
+          <div class="panel">
+            <h3><i class="bi bi-list-check"></i> Что нужно сделать</h3>
+            <div class="accordion accordion-flush" id="order-services">
+              {% for category, rows in order_form.grouped %}
+                <div class="accordion-item">
+                  <h4 class="accordion-header">
+                    <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#cat-{{ forloop.counter }}">
+                      {{ category }}&nbsp;<span class="text-muted small">({{ rows|length }})</span>
+                    </button>
+                  </h4>
+                  <div id="cat-{{ forloop.counter }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}">
+                    <div class="accordion-body">
+                      {% for service, field in rows %}
+                        <div class="row align-items-center g-2 py-2 border-bottom">
+                          <div class="col-sm-7">
+                            <label for="{{ field.id_for_label }}" class="fw-semibold">{{ service.name }}</label>
+                            <div class="small text-muted">{{ service.price|rub }} за единицу</div>
+                          </div>
+                          <div class="col-sm-5">
+                            <div class="input-group input-group-sm">
+                              <input type="number" min="0" max="9999" step="any" inputmode="decimal"
+                                     name="{{ field.html_name }}" id="{{ field.id_for_label }}"
+                                     value="{{ field.value|default_if_none:'' }}"
+                                     class="form-control order-qty{% if field.errors %} is-invalid{% endif %}"
+                                     data-price="{{ service.price|stringformat:'s' }}" placeholder="0">
+                              <span class="input-group-text">ед.</span>
+                            </div>
+                            {% for e in field.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                          </div>
+                        </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+          <div class="panel order-summary">
+            <h3><i class="bi bi-receipt"></i> Ваша заявка</h3>
+
+            <div class="mb-3">
+              <label class="form-label" for="{{ order_form.contact_name.id_for_label }}">Ваше имя</label>
+              <input type="text" name="contact_name" maxlength="100" id="{{ order_form.contact_name.id_for_label }}"
+                     value="{{ order_form.contact_name.value|default_if_none:'' }}"
+                     class="form-control{% if order_form.contact_name.errors %} is-invalid{% endif %}" autocomplete="name">
+              {% for e in order_form.contact_name.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="{{ order_form.contact_phone.id_for_label }}">Телефон</label>
+              <input type="tel" name="contact_phone" maxlength="30" id="{{ order_form.contact_phone.id_for_label }}"
+                     value="{{ order_form.contact_phone.value|default_if_none:'' }}" placeholder="+7 900 123-45-67"
+                     class="form-control{% if order_form.contact_phone.errors %} is-invalid{% endif %}" autocomplete="tel">
+              {% for e in order_form.contact_phone.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+            </div>
+
+            <ul class="list-unstyled mb-3">
+              <li class="d-flex justify-content-between"><span>Выбрано услуг</span><strong id="order-count">0</strong></li>
+              <li class="d-flex justify-content-between"><span>Сумма</span><strong id="order-subtotal">0 ₽</strong></li>
+              <li class="d-flex justify-content-between text-success"><span>Скидка <span id="order-percent">0</span>%</span><strong id="order-discount">−0 ₽</strong></li>
+              <li class="d-flex justify-content-between fs-5 mt-2 pt-2 border-top"><span>Итого</span><strong id="order-total">0 ₽</strong></li>
+            </ul>
+            <p class="small text-muted" id="order-hint">
+              Скидка:{% for step in discount_steps %} от {{ step.threshold|rub }} — {{ step.percent }}%{% if not forloop.last %},{% endif %}{% endfor %}.
+            </p>
+
+            <button type="submit" class="btn btn-primary w-100"><i class="bi bi-send"></i> Отправить заявку</button>
+            {% if not user.is_authenticated %}
+              <p class="small text-muted mt-2 mb-0">Заявку можно оставить без регистрации.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>

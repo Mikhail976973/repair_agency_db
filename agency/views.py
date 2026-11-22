@@ -1,7 +1,12 @@
 from django.db.models import (Avg, Case, CharField, Count, DecimalField,
                               ExpressionWrapper, F, Max, Min, Q, Sum, Value, When)
-from django.shortcuts import get_object_or_404, render
+from django.contrib import messages
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 
+from .forms import OrderRequestForm
+from .order_logic import DISCOUNT_STEPS, create_order_request
+from .templatetags.agency_extras import rub
 from .models import (FINISHED_STATUSES, Crew, Order, OrderItem, OrderStatus, Service,
                      ServiceCategory, User)
 
@@ -96,12 +101,61 @@ def management_widget():
             'unassigned': unassigned}
 
 
+def charts_data(user):
+    """Данные для графиков (Chart.js): передаются в шаблон через json_script."""
+    # число заказов по категориям услуг (отменённые не считаем)
+    categories = (ServiceCategory.objects
+                  .annotate(orders_count=Count(
+                      'services__order_items__order',
+                      filter=~Q(services__order_items__order__status__name='Отменён'),
+                      distinct=True))
+                  .order_by('-orders_count', 'name'))
+    return {'categories': {'labels': [c.name for c in categories],
+                           'values': [c.orders_count for c in categories]}}
+
+
+def order_request(request):
+    """Обработка формы заявки: возвращает (форма, ответ-редирект или None)."""
+    user = request.user
+    if request.method != 'POST':
+        initial = {}
+        if user.is_authenticated:
+            initial = {'contact_name': user.get_full_name() or user.username,
+                       'contact_phone': user.phone}
+        return OrderRequestForm(initial=initial), None
+
+    form = OrderRequestForm(request.POST)
+    if not form.is_valid():
+        return form, None
+    order, percent = create_order_request(
+        name=form.cleaned_data['contact_name'], phone=form.cleaned_data['contact_phone'],
+        items=form.items, client=user if user.is_authenticated else None)
+    text = (f'Заявка №{order.pk} принята. Позиций: {order.items.count()}, '
+            f'сумма {rub(order.total_cost)}')
+    if percent:
+        text += f' (скидка {percent}%)'
+    text += (f'. Менеджер {order.manager} свяжется с вами по телефону {order.contact_phone}.'
+             if order.manager else '. Менеджер свяжется с вами по указанному телефону.')
+    messages.success(request, text)
+    return form, redirect(f"{reverse('agency:dashboard')}#order")
+
+
 def dashboard(request):
     user = request.user
-    context = {'catalog': catalog_widget()}
+    order_form, response = order_request(request)
+    if response:
+        return response
+    context = {'catalog': catalog_widget(), 'charts': charts_data(user),
+               'order_form': order_form,
+               'discount_steps': [{'threshold': t, 'percent': p} for t, p in DISCOUNT_STEPS]}
     if user.is_authenticated:
-        context['orders'] = orders_widget(user)
+        orders = orders_widget(user)
+        orders['by_status'] = list(orders['by_status'])
+        context['orders'] = orders
         context['is_staff_member'] = is_staff_member(user)
+        context['charts']['statuses'] = {
+            'labels': [r['status__name'] for r in orders['by_status']],
+            'values': [r['count'] for r in orders['by_status']]}
     if user.is_superuser:
         context['management'] = management_widget()
     return render(request, 'agency/dashboard.html', context)
@@ -109,18 +163,37 @@ def dashboard(request):
 
 # ---------- Каталог ----------
 
+def search_filter(query, *fields):
+    """Поиск без учёта регистра. В SQLite LIKE не различает регистр только у латиницы,
+    поэтому для кириллицы перебираем несколько вариантов написания."""
+    variants = {query, query.lower(), query.upper(), query.capitalize()}
+    condition = Q()
+    for field in fields:
+        for variant in variants:
+            condition |= Q(**{f'{field}__icontains': variant})
+    return condition
+
+
 def service_list(request):
     category_id = request.GET.get('category')
+    query = request.GET.get('q', '').strip()
     services = Service.objects.select_related('category')
     if category_id:
         services = services.filter(category_id=category_id)
+    if query:
+        services = services.filter(search_filter(query, 'name', 'category__name'))
     return render(request, 'agency/service_list.html', {
         'services': services,
         'categories': ServiceCategory.objects.all(),
         'current_category': category_id,
+        'q': query,
     })
 
 
 def service_detail(request, pk):
-    service = get_object_or_404(Service, pk=pk)
-    return render(request, 'agency/service_detail.html', {'service': service})
+    service = get_object_or_404(Service.objects.select_related('category'), pk=pk)
+    orders_count = (service.order_items.exclude(order__status__name='Отменён')
+                    .values('order').distinct().count())
+    related = Service.objects.filter(category=service.category).exclude(pk=service.pk)[:3]
+    return render(request, 'agency/service_detail.html', {
+        'service': service, 'orders_count': orders_count, 'related': related})
