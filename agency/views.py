@@ -1,10 +1,15 @@
+from functools import wraps
+
 from django.db.models import (Avg, Case, CharField, Count, DecimalField,
                               ExpressionWrapper, F, Max, Min, Q, Sum, Value, When)
 from django.contrib import messages
+from django.core.exceptions import PermissionDenied
+from django.db.models import ProtectedError
+from django.contrib.auth.views import redirect_to_login
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
-from .forms import OrderRequestForm
+from .forms import OrderRequestForm, ServiceForm
 from .order_logic import DISCOUNT_STEPS, create_order_request
 from .templatetags.agency_extras import rub
 from .models import (FINISHED_STATUSES, Crew, Order, OrderItem, OrderStatus, Service,
@@ -183,6 +188,7 @@ def service_list(request):
     if query:
         services = services.filter(search_filter(query, 'name', 'category__name'))
     return render(request, 'agency/service_list.html', {
+        'can_manage': is_staff_member(request.user),
         'services': services,
         'categories': ServiceCategory.objects.all(),
         'current_category': category_id,
@@ -195,5 +201,67 @@ def service_detail(request, pk):
     orders_count = (service.order_items.exclude(order__status__name='Отменён')
                     .values('order').distinct().count())
     related = Service.objects.filter(category=service.category).exclude(pk=service.pk)[:3]
+    # связанная таблица: позиции заказов с этой услугой (новые заказы сверху)
+    order_items = (service.order_items.select_related('order__status')
+                   .order_by('-order__created_at')[:10])
     return render(request, 'agency/service_detail.html', {
-        'service': service, 'orders_count': orders_count, 'related': related})
+        'service': service, 'orders_count': orders_count, 'related': related,
+        'order_items': order_items, 'can_manage': is_staff_member(request.user)})
+
+
+# ---------- Управление услугами (менеджер, администратор, суперпользователь) ----------
+
+def staff_only(view):
+    """Гостя отправляет на вход, вошедшего без прав (клиента) — на страницу 403."""
+    @wraps(view)
+    def wrapper(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect_to_login(request.get_full_path())
+        if not is_staff_member(request.user):
+            raise PermissionDenied
+        return view(request, *args, **kwargs)
+    return wrapper
+
+
+@staff_only
+def service_create(request):
+    form = ServiceForm(request.POST or None, request.FILES or None)
+    if request.method == 'POST' and form.is_valid():
+        service = form.save(commit=False)
+        service.updated_by = request.user
+        service.save()
+        messages.success(request, f'Услуга «{service.name}» добавлена')
+        return redirect(service)
+    return render(request, 'agency/service_form.html', {'form': form, 'service': None})
+
+
+@staff_only
+def service_edit(request, pk):
+    service = get_object_or_404(Service, pk=pk)
+    form = ServiceForm(request.POST or None, request.FILES or None, instance=service)
+    if request.method == 'POST' and form.is_valid():
+        service = form.save(commit=False)
+        service.updated_by = request.user
+        service.save()
+        messages.success(request, f'Изменения в услуге «{service.name}» сохранены')
+        return redirect(service)
+    return render(request, 'agency/service_form.html', {'form': form, 'service': service})
+
+
+@staff_only
+def service_delete(request, pk):
+    service = get_object_or_404(Service, pk=pk)
+    if request.method == 'POST':
+        name = service.name
+        try:
+            service.delete()
+        except ProtectedError:
+            # услуга есть в заказах (OrderItem.service on_delete=PROTECT)
+            messages.error(request, f'Услугу «{name}» нельзя удалить: она есть в заказах. '
+                                    'Измените её или оставьте в каталоге.')
+            return redirect(service)
+        messages.success(request, f'Услуга «{name}» удалена')
+        return redirect('agency:service_list')
+    orders_count = service.order_items.values('order').distinct().count()
+    return render(request, 'agency/service_confirm_delete.html',
+                  {'service': service, 'orders_count': orders_count})

@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Service
+from .models import Service, ServiceCategory
 from .order_logic import MAX_SUBTOTAL, normalize_phone
 
 
@@ -51,3 +51,30 @@ class OrderRequestForm(forms.Form):
         if sum(s.price * q for s, q in self.items) > MAX_SUBTOTAL:
             raise forms.ValidationError('Слишком большая сумма заявки: уточните объёмы работ.')
         return cleaned
+
+
+class ServiceForm(forms.ModelForm):
+    """Добавление и редактирование услуги (для менеджера и администратора)."""
+
+    class Meta:
+        model = Service
+        fields = ['category', 'name', 'price', 'image']
+        widgets = {
+            'category': forms.Select(attrs={'class': 'form-select'}),
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Например, Укладка плитки'}),
+            'price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+            'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        }
+        labels = {'price': 'Цена за единицу, ₽'}
+
+    def clean_name(self):
+        name = ' '.join(self.cleaned_data['name'].split())
+        if len(name) < 3:
+            raise forms.ValidationError('Название должно быть не короче трёх символов.')
+        return name
+
+    def clean_price(self):
+        price = self.cleaned_data['price']
+        if price <= 0:
+            raise forms.ValidationError('Цена должна быть больше нуля.')
+        return price
